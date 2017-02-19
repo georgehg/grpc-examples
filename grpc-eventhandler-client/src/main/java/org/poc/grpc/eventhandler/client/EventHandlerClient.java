@@ -67,12 +67,14 @@ public class EventHandlerClient {
 			eventsMap.put(eventId, Event.newBuilder().setId(eventId).setName("Serial").setAttribute(serial).build());
 		}
 		
+		logger.info("Sending events: " + eventsMap);
+		
 		StreamObserver<Event> responseObserver = streamStub.streamEvent(new StreamObserver<Response>() {
 			
 			@Override
 			public void onNext(Response response) {
 				logger.info("Response Id:" + response.getEventId() + " and status: " + response.getStatus());
-				logger.info("Found event: " + eventsMap.get(response.getEventId()));
+				eventsMap.remove(response.getEventId());
 			}
 			
 			@Override
@@ -83,13 +85,16 @@ public class EventHandlerClient {
 			
 			@Override
 			public void onCompleted() {
-				logger.info("Transfer Completed");
-				
+				logger.info("Transfer Completed. Remaining events: " + eventsMap );
 			}
 		});
 		
 		int count = 0;
-		for (Map.Entry<Integer, Event> entry : eventsMap.entrySet()) {
+		
+		Map<Integer, Event> sendingEventsMap = new HashMap<Integer, Event>();
+		sendingEventsMap.putAll(eventsMap);
+		
+		for (Map.Entry<Integer, Event> entry : sendingEventsMap.entrySet()) {
 			logger.info("Sending event: " + entry.getValue());
 			Thread.sleep(random.nextInt(500));
 			responseObserver.onNext(entry.getValue());
