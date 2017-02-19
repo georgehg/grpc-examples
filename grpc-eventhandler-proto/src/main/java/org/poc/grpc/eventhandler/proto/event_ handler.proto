@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_multiple_files = true; 
+option java_package = "org.poc.grpc.eventhandler.api"; 
+option java_outer_classname = "EventHandlerProto"; 
+option objc_class_prefix = "EHL"; 
+
+package org.poc.grpc.eventhandler.api;
+
+message Event {
+	int32 id= 1;
+	string name = 2; 
+	string attribute = 3;
+}
+
+message Response {
+	int32 event_id = 1;
+	enum Status {
+	 	OK = 0;
+	 	ERRO = 1;
+	};
+	Status status = 2;
+}
+
+service EventHandler {
+	rpc SendEvent (Event) returns (Response){}
+	
+	rpc StreamEvent (stream Event) returns (stream Response){}
+}
+
