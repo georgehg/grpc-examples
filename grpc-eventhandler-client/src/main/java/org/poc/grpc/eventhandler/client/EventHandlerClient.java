@@ -14,6 +14,7 @@ import org.poc.grpc.eventhandler.api.EventHandlerGrpc.EventHandlerBlockingStub;
 import org.poc.grpc.eventhandler.api.EventHandlerGrpc.EventHandlerStub;
 import org.poc.grpc.eventhandler.api.Response;
 
+import io.grpc.Status;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -50,9 +51,16 @@ public class EventHandlerClient {
 
 		Response response;
 
-		response = eventStub.sendEvent(event);
+		try {
+			response = eventStub.sendEvent(event);
+		} catch (Exception e) {
+			logger.info(e.toString());
+			Status status = Status.fromThrowable(e);
+			logger.info("Status Code: " + status.getCode() + ", Cause: " + status.getCause() + ", Message: " + status.getDescription());
+			return;
+		}
 
-		logger.info("Response for: " + eventId + " received with Id:" + response.getEventId() + " and status: " + response.getStatus());
+		logger.info("Response for: " + eventId + " received with Id:" + response.getEventId());
 
 		return;
 
@@ -69,17 +77,19 @@ public class EventHandlerClient {
 		
 		logger.info("Sending events: " + eventsMap);
 		
-		StreamObserver<Event> responseObserver = streamStub.streamEvent(new StreamObserver<Response>() {
+		StreamObserver<Event> requestObserver = streamStub.streamEvent(new StreamObserver<Response>() {
 			
 			@Override
 			public void onNext(Response response) {
-				logger.info("Response Id:" + response.getEventId() + " and status: " + response.getStatus());
+				logger.info("Response Id:" + response.getEventId());
 				eventsMap.remove(response.getEventId());
 			}
 			
 			@Override
-			public void onError(Throwable t) {
-				// TODO Auto-generated method stub
+			public void onError(Throwable e) {
+				Status status = Status.fromThrowable(e);
+				logger.info("Status Code: " + status.getCode() + ", Cause: " + status.getCause() + ", Message: " + status.getDescription());
+
 				
 			}
 			
@@ -95,19 +105,24 @@ public class EventHandlerClient {
 		sendingEventsMap.putAll(eventsMap);
 		
 		for (Map.Entry<Integer, Event> entry : sendingEventsMap.entrySet()) {
+			if (channel.isTerminated())
+				logger.info("Connection Terminated");
+			
+			if (channel.isShutdown())
+				logger.info("Connection Shutdown");
 			logger.info("Sending event: " + entry.getValue());
 			Thread.sleep(random.nextInt(500));
-			responseObserver.onNext(entry.getValue());
+			requestObserver.onNext(entry.getValue());
 			count++;
 			if (count == 10) {
-				System.in.read();
+				//System.in.read();
 				count = 0;
 			}
 		}
 	
 		Thread.sleep(3000);
 		
-		responseObserver.onCompleted();
+		requestObserver.onCompleted();
 		
 		return;
 	}

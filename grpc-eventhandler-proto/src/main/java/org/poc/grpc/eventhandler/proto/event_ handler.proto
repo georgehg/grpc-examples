@@ -15,12 +15,6 @@ message Event {
 
 message Response {
 	int32 event_id = 1;
-	enum Status {
-	 	OK = 0;
-	 	ERRO = 1;
-	 	DUPLICATED = 2;
-	};
-	Status status = 2;
 }
 
 service EventHandler {

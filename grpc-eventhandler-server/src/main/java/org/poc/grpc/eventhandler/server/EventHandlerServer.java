@@ -15,8 +15,8 @@ public class EventHandlerServer {
 	private final Server server;
 	
 	public EventHandlerServer(int port) {
-		this.port = port;
-		this.server = ServerBuilder.forPort(port).addService(new EventHandlerService()).build();
+		this.port = port; 
+		this.server = ServerBuilder.forPort(port).addService(new EventHandlerService().bindService()).build();
 	}
 	
 	public void start() throws IOException {

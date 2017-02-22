@@ -8,6 +8,7 @@ public class ApplicationServer {
 		EventHandlerServer server = new EventHandlerServer(7777);
 		
 		server.start();
+		
 		server.blockUntilShutdown();
 	}
 
