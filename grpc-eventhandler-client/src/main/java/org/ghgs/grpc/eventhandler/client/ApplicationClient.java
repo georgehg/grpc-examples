@@ -1,4 +1,4 @@
-package org.poc.grpc.eventhandler.client;
+package org.ghgs.grpc.eventhandler.client;
 
 import java.io.IOException;
 
@@ -8,8 +8,6 @@ public class ApplicationClient {
 		EventHandlerClient client = new EventHandlerClient("localhost", 7777);
 		
 		//client.streamEvent();
-		
-		
 		
 		for (int i = 0; i<=300; i++) {
 			client.sendEvent();

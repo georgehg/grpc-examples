@@ -1,10 +1,12 @@
-package org.poc.grpc.eventhandler.server;
+package org.ghgs.grpc.eventhandler.server;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.health.v1.HealthCheckResponse.ServingStatus;
+import io.grpc.services.HealthStatusManager;
 
 public class EventHandlerServer {
 	
@@ -15,8 +17,15 @@ public class EventHandlerServer {
 	private final Server server;
 	
 	public EventHandlerServer(int port) {
+		
+		HealthStatusManager healthStatusService = new HealthStatusManager();
+		healthStatusService.setStatus("EventHandler", ServingStatus.SERVING);
+		
 		this.port = port; 
-		this.server = ServerBuilder.forPort(port).addService(new EventHandlerService().bindService()).build();
+		this.server = ServerBuilder.forPort(port)
+								    .addService(new EventHandlerService().bindService())
+								    .addService(healthStatusService.getHealthService())
+								    .build();
 	}
 	
 	public void start() throws IOException {

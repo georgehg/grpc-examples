@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.poc.grpc</groupId>
+  <groupId>org.ghgs.grpc</groupId>
   <artifactId>grpc-eventhandler-proto</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -50,7 +50,7 @@
         <artifactId>protobuf-maven-plugin</artifactId>
         <version>0.5.0</version>
         <configuration>
-          <protoSourceRoot>${project.build.sourceDirectory}/org/poc/grpc/eventhandler/proto</protoSourceRoot>
+          <protoSourceRoot>${project.build.sourceDirectory}/org/ghgs/grpc/eventhandler/proto</protoSourceRoot>
           <protocArtifact>com.google.protobuf:protoc:3.0.2:exe:${os.detected.classifier}</protocArtifact>
           <pluginId>grpc-java</pluginId>
           <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.0.3:exe:${os.detected.classifier}</pluginArtifact>

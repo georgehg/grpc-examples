@@ -1,31 +1,31 @@
-package org.poc.grpc.eventhandler.server;
+package org.ghgs.grpc.eventhandler.server;
 
 import java.util.logging.Logger;
 
-import org.poc.grpc.eventhandler.api.Event;
-import org.poc.grpc.eventhandler.api.EventHandlerGrpc;
-import org.poc.grpc.eventhandler.api.Response;
+import org.ghgs.grpc.eventhandler.api.Event;
+import org.ghgs.grpc.eventhandler.api.EventHandlerGrpc;
+import org.ghgs.grpc.eventhandler.api.Response;
 
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 
 public class EventHandlerService extends EventHandlerGrpc.EventHandlerImplBase {
 	
-	private static final Logger logger = Logger.getLogger(EventHandlerService.class.getName());
+	private static final Logger log = Logger.getLogger(EventHandlerService.class.getName());
 	
 	@Override
 	public void sendEvent(Event request, StreamObserver<Response> responseObserver) {
 		
-		logger.info("Received event: " + request);
+		log.info("Received event: " + request);
 		/*try {
 			System.in.read();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-		//responseObserver.onNext(answerEvent(request));		
-		responseObserver.onError(Status.ALREADY_EXISTS.withDescription("Could not Insert Event on DB").asException() );
-		//responseObserver.onCompleted();
+		responseObserver.onNext(answerEvent(request));		
+		//responseObserver.onError(Status.ALREADY_EXISTS.withDescription("Could not Insert Event on DB").asException() );
+		responseObserver.onCompleted();
 	}
 	
 	@Override
@@ -35,10 +35,10 @@ public class EventHandlerService extends EventHandlerGrpc.EventHandlerImplBase {
 			
 			@Override
 			public void onNext(Event request) {
-				logger.info("Received request: " + request);
+				log.info("Received request: " + request);
 
-				//responseObserver.onNext(answerEvent(request));
-				responseObserver.onError(Status.ALREADY_EXISTS.withDescription("Could not Insert Event on DB").asException() );
+				responseObserver.onNext(answerEvent(request));
+				//responseObserver.onError(Status.ALREADY_EXISTS.withDescription("Could not Insert Event on DB").asException() );
 			}
 			
 			@Override
@@ -49,7 +49,7 @@ public class EventHandlerService extends EventHandlerGrpc.EventHandlerImplBase {
 			@Override
 			public void onCompleted() {
 				
-				logger.info("Completing client: " + responseObserver);
+				log.info("Completing client: " + responseObserver);
 				responseObserver.onCompleted();
 				
 			}
