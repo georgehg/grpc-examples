@@ -37,7 +37,7 @@ public class EventHandlerClient {
 	private final Random random = new Random();
 
 	public EventHandlerClient(String hostName, int port) {
-		this.channel = ManagedChannelBuilder.forAddress(hostName, port).usePlaintext(true).build();
+		this.channel = ManagedChannelBuilder.forTarget("").usePlaintext(true).build();
 		this.eventStub = EventHandlerGrpc.newBlockingStub(channel);
 		this.streamStub = EventHandlerGrpc.newStub(channel);
 		this.healthStub = HealthGrpc.newBlockingStub(channel);

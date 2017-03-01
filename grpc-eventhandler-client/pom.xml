@@ -35,7 +35,7 @@
      <plugin>  
        <groupId>org.apache.maven.plugins</groupId>
        <artifactId>maven-compiler-plugin</artifactId>
-       <version>3.1</version>
+       <version>3.6.1</version>
        <configuration>
            <source>1.8</source>
            <target>1.8</target>
@@ -45,10 +45,11 @@
      <plugin>
        <groupId>org.apache.maven.plugins</groupId>
        <artifactId>maven-jar-plugin</artifactId>
+       <version>3.0.0</version>
        <configuration>
          <archive>
            <manifest>
-             <mainClass>org.poc.grpc.eventhandler.client.ApplicationClient</mainClass>
+             <mainClass>org.ghgs.grpc.eventhandler.client.ApplicationClient</mainClass>
            </manifest>
          </archive>
         </configuration>
@@ -57,7 +58,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>1.4</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -70,6 +71,24 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-maven-plugin</artifactId>
+        <version>3.2.28</version>
+        <configuration>
+          <mode>openshift</mode>
+        </configuration>
+        <executions>
+	      <execution>
+	        <goals>
+	          <goal>resource</goal>
+	          <goal>build</goal>
+	          <goal>deploy</goal>
+	        </goals>
+	      </execution>
+  		</executions>
       </plugin>
                    
     </plugins>

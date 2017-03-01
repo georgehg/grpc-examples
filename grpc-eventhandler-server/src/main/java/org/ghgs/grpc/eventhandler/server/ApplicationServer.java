@@ -6,7 +6,7 @@ public class ApplicationServer {
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		
-		EventHandlerServer server = new EventHandlerServer(7777);
+		EventHandlerServer server = new EventHandlerServer(7070);
 		
 		server.start();
 		
