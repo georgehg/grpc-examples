@@ -5,7 +5,18 @@
   <groupId>org.ghgs.grpc</groupId>
   <artifactId>grpc-eventhandler-client</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.5.1.RELEASE</version>
+  </parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>1.8</java.version>
+    <grpc.version>1.1.2</grpc.version>
+  </properties>
 
   <dependencies>
   
@@ -16,15 +27,20 @@
     </dependency>
     
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    
+    <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-netty</artifactId>
-      <version>1.1.2</version>
+      <version>${grpc.version}</version>
     </dependency>
     
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-services</artifactId>
-      <version>1.1.2</version>
+      <version>${grpc.version}</version>
     </dependency>
     
   </dependencies>
@@ -32,45 +48,9 @@
   <build>
     <plugins>
     
-     <plugin>  
-       <groupId>org.apache.maven.plugins</groupId>
-       <artifactId>maven-compiler-plugin</artifactId>
-       <version>3.6.1</version>
-       <configuration>
-           <source>1.8</source>
-           <target>1.8</target>
-       </configuration>
-     </plugin>
-       
      <plugin>
-       <groupId>org.apache.maven.plugins</groupId>
-       <artifactId>maven-jar-plugin</artifactId>
-       <version>3.0.0</version>
-       <configuration>
-         <archive>
-           <manifest>
-             <mainClass>org.ghgs.grpc.eventhandler.client.ApplicationClient</mainClass>
-           </manifest>
-         </archive>
-        </configuration>
-      </plugin>
-     
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <shadedArtifactAttached>true</shadedArtifactAttached>
-              <shadedClassifierName>all</shadedClassifierName>
-            </configuration>
-          </execution>
-        </executions>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
       
       <plugin>
@@ -90,7 +70,7 @@
 	      </execution>
   		</executions>
       </plugin>
-                   
+      
     </plugins>
   </build>
   

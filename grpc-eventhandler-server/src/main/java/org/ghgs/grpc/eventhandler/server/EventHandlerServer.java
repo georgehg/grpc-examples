@@ -1,36 +1,46 @@
 package org.ghgs.grpc.eventhandler.server;
 
 import java.io.IOException;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.health.v1.HealthCheckResponse.ServingStatus;
 import io.grpc.services.HealthStatusManager;
 
+@ConfigurationProperties(prefix="server")
 public class EventHandlerServer {
 	
-	private static final Logger logger = Logger.getLogger(EventHandlerServer.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(EventHandlerServer.class.getName());
 	
-	private final int port;
+	private int port;
 	
 	private final Server server;
 	
-	public EventHandlerServer(int port) {
+	public EventHandlerServer() throws IOException, InterruptedException {
 		
 		HealthStatusManager healthStatusService = new HealthStatusManager();
 		healthStatusService.setStatus("EventHandler", ServingStatus.SERVING);
 		
-		this.port = port; 
-		this.server = ServerBuilder.forPort(port)
+		this.server = ServerBuilder.forPort(7070)
 								    .addService(new EventHandlerService().bindService())
 								    .addService(healthStatusService.getHealthService())
 								    .build();
+		
+		start();
+		blockUntilShutdown();
+	}
+	
+	public Server getServer() {
+		return server;
 	}
 	
 	public void start() throws IOException {
 		server.start();
-		logger.info("Server started, listening on port: " + port);
+		log.info("Server started, listening on port: {}", port);
 		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 		
